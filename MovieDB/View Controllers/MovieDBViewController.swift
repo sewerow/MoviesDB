@@ -8,11 +8,16 @@
 
 import UIKit
 import Then
+import RxSwift
+import RxCocoa
 
 class MovieDBViewController: UIViewController {
+    @IBOutlet weak var moviesTableView: UITableView!
+    @IBOutlet weak var filterBttn: UIButton!
     
     private var viewModel: MovieDBViewModelProtocol!
     private var navigator: Navigator!
+    private var bag = DisposeBag()
     
     static func createWith(navigator: Navigator,
                            storyboard: UIStoryboard,
@@ -30,7 +35,5 @@ class MovieDBViewController: UIViewController {
     
     private func bindUI() {
         
-        
     }
-    
 }
