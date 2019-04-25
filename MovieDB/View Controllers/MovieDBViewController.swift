@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Then
 
 class MovieDBViewController: UIViewController {
     
@@ -16,7 +17,10 @@ class MovieDBViewController: UIViewController {
     static func createWith(navigator: Navigator,
                            storyboard: UIStoryboard,
                            viewModel: MovieDBViewModelProtocol) -> MovieDBViewController {
-        return storyboard.instantiateViewController(ofType: MovieDBViewController.self)
+        return storyboard.instantiateViewController(ofType: MovieDBViewController.self).then { vc in
+            vc.navigator = navigator
+            vc.viewModel = viewModel
+        }
     }
     
     override func viewDidLoad() {
