@@ -19,7 +19,7 @@ class Navigator {
     func show(segue: Segue, sender: UIViewController) {
         switch segue {
         case .MovieDB:
-            let vm = MovieDBViewModel()
+            let vm = MovieDBViewModel(movieApiService: MovieAPIService())
             let vc = MovieDBViewController.createWith(navigator: self,
                                                       storyboard: sender.storyboard ?? defaultStoryboard,
                                                       viewModel: vm)

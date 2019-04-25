@@ -34,6 +34,12 @@ class MovieDBViewController: UIViewController {
     }
     
     private func bindUI() {
+        self.viewModel.movies.bind(to: moviesTableView.rx.items(cellIdentifier: "DefaultCell")) { row, model, cell in
+            cell.textLabel?.text = model["title"] as? String
+        }.disposed(by: bag)
         
+        self.moviesTableView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
+            
+        }).disposed(by: bag)
     }
 }

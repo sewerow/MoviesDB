@@ -12,7 +12,7 @@ import RxSwift
 
 
 protocol MovieAPIProtocol {
-    func discoverMovies(page: Int) -> Observable<Movie>
+    func discoverMovies(page: Int) -> Observable<NSDictionary>
 }
 
 class MovieAPIService : MovieAPIProtocol {
@@ -21,11 +21,15 @@ class MovieAPIService : MovieAPIProtocol {
         static let apiKey = "46d63a13f19138a3fcf367ae2ad2cabf"
     }
     
-    func discoverMovies(page: Int) -> Observable<Movie> {
+    func discoverMovies(page: Int) -> Observable<NSDictionary> {
         return requestJSON(.get, discoverMoviesRequest(page: page)).map { (r, json )in
-            print("\(json)")
-            return Movie()
+            if r.statusCode == 200 {
+                return json as! NSDictionary
+            }
+            
+            return NSDictionary()
         }
+        
     }
     
     private func discoverMoviesRequest(page number: Int) -> String {

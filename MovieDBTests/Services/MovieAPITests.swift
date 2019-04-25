@@ -23,7 +23,8 @@ class MovieAPITests: XCTestCase {
     func testMovieDiscovery() {
         let expecation = XCTestExpectation(description: "list of movies")
         
-        movieService.discoverMovies(page: 1).subscribe { _ in
+        movieService.discoverMovies(page: 1).subscribe { data in
+            XCTAssertTrue(data.element?.count != 0)
             expecation.fulfill()
         }.disposed(by: bag)
         
