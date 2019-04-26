@@ -47,6 +47,9 @@ class MovieDBViewController: UIViewController {
             guard let `self` = self, let indexPath = event.element?.indexPath else { return }
             `self`.viewModel.willDislplay(indexPath: indexPath)
         }.disposed(by: bag)
-        
+    }
+    
+    @IBAction func filter(_ sender: Any) {
+        self.viewModel.filterByData()
     }
 }

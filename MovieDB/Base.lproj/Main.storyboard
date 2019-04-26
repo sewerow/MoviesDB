@@ -50,6 +50,9 @@
                                     <constraint firstAttribute="height" constant="55" id="uwe-Yv-edy"/>
                                 </constraints>
                                 <state key="normal" title="Filter by date"/>
+                                <connections>
+                                    <action selector="filter:" destination="q65-Yl-x2L" eventType="touchUpInside" id="kfy-dD-qAU"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
