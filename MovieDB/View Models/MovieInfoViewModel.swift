@@ -9,5 +9,17 @@
 import Foundation
 
 protocol MovieInfoViewModelProtocol {
+    var description : String { get }
+}
+
+class MovieInfoViewModel : MovieInfoViewModelProtocol {
+    let info: Dictionary<String, Any>
     
+    init(info: Dictionary<String, Any>) {
+        self.info = info
+    }
+    
+    var description : String {
+        return info.description
+    }
 }

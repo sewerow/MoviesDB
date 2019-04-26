@@ -13,8 +13,9 @@
         <!--Navigation Controller-->
         <scene sceneID="0kg-nL-nCE">
             <objects>
-                <navigationController navigationBarHidden="YES" id="qCe-ke-gjF" sceneMemberID="viewController">
+                <navigationController id="qCe-ke-gjF" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="nLU-vD-06D">
+                        <rect key="frame" x="0.0" y="20" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                 </navigationController>
@@ -79,17 +80,34 @@
         <!--Movie Info View Controller-->
         <scene sceneID="HpE-vb-vUD">
             <objects>
-                <viewController id="RDq-Kv-C5c" customClass="MovieInfoViewController" customModule="MovieDB" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MovieInfoViewController" id="RDq-Kv-C5c" customClass="MovieInfoViewController" customModule="MovieDB" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2Me-r2-aOo">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="qHU-WD-l25">
+                                <rect key="frame" x="20" y="20" width="374" height="696"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="qHU-WD-l25" firstAttribute="top" secondItem="3xI-rg-oYN" secondAttribute="top" id="SUJ-gU-pDZ"/>
+                            <constraint firstItem="qHU-WD-l25" firstAttribute="trailing" secondItem="2Me-r2-aOo" secondAttribute="trailingMargin" id="afa-9R-bCc"/>
+                            <constraint firstItem="qHU-WD-l25" firstAttribute="leading" secondItem="2Me-r2-aOo" secondAttribute="leadingMargin" id="feD-Ia-6iU"/>
+                            <constraint firstAttribute="bottom" secondItem="qHU-WD-l25" secondAttribute="bottom" constant="20" symbolic="YES" id="gpU-Q8-L1t"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="3xI-rg-oYN"/>
                     </view>
+                    <connections>
+                        <outlet property="textField" destination="qHU-WD-l25" id="4p9-56-gCU"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CXx-cc-JsA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1020" y="821"/>
+            <point key="canvasLocation" x="1018.840579710145" y="820.92391304347836"/>
         </scene>
     </scenes>
 </document>

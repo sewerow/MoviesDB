@@ -38,10 +38,10 @@ class MovieDBViewController: UIViewController {
             cell.textLabel?.text = model["title"] as? String
         }.disposed(by: bag)
         
-        self.moviesTableView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
+        self.moviesTableView.rx.modelSelected(Dictionary<String, Any>.self).subscribe{[weak self] model in
             guard let `self` = self else { return }
-            `self`.navigator.show(segue: .MovieInfo, sender: `self`)
-        }).disposed(by: bag)
+            `self`.navigator.show(segue: .MovieInfo, sender: `self`, info: model.element ?? [:])
+        }.disposed(by: bag)
         
         self.moviesTableView.rx.willDisplayCell.asObservable().subscribe { [weak self] (event: Event<(cell: UITableViewCell, indexPath: IndexPath)>) in
             guard let `self` = self, let indexPath = event.element?.indexPath else { return }

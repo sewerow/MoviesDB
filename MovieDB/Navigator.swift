@@ -17,7 +17,7 @@ class Navigator {
         case MovieInfo
     }
     
-    func show(segue: Segue, sender: UIViewController) {
+    func show(segue: Segue, sender: UIViewController, info: Dictionary<String, Any> = [:]) {
         switch segue {
         case .MovieDB:
             let vm = MovieDBViewModel(movieApiService: MovieAPIService())
@@ -26,8 +26,11 @@ class Navigator {
                                                       viewModel: vm)
             show(target: vc, sender: sender)
         case .MovieInfo:
-            
-            break
+            let vm = MovieInfoViewModel(info: info)
+            let vc = MovieInfoViewController.createWith(navigator: self,
+                                                        storyboard: sender.storyboard ?? defaultStoryboard,
+                                                        viewModel: vm)
+            show(target: vc, sender: sender)
         }
     }
     

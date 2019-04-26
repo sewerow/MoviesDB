@@ -11,6 +11,8 @@ import Then
 
 class MovieInfoViewController : UIViewController {
     
+    @IBOutlet weak var textField: UITextView!
+    
     private var navigator: Navigator!
     private var viewModel: MovieInfoViewModelProtocol!
 
@@ -23,4 +25,12 @@ class MovieInfoViewController : UIViewController {
         }
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        bindUI()
+    }
+    
+    private func bindUI() {
+        textField.text = self.viewModel.description
+    }
 }
