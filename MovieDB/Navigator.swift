@@ -14,6 +14,7 @@ class Navigator {
 
     enum Segue {
         case MovieDB
+        case MovieInfo
     }
     
     func show(segue: Segue, sender: UIViewController) {
@@ -24,6 +25,9 @@ class Navigator {
                                                       storyboard: sender.storyboard ?? defaultStoryboard,
                                                       viewModel: vm)
             show(target: vc, sender: sender)
+        case .MovieInfo:
+            
+            break
         }
     }
     

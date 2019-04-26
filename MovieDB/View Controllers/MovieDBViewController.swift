@@ -39,7 +39,8 @@ class MovieDBViewController: UIViewController {
         }.disposed(by: bag)
         
         self.moviesTableView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
-            
+            guard let `self` = self else { return }
+            `self`.navigator.show(segue: .MovieInfo, sender: `self`)
         }).disposed(by: bag)
     }
 }
