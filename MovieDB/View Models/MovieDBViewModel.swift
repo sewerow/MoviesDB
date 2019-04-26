@@ -13,11 +13,18 @@ import RxCocoa
 protocol MovieDBViewModelProtocol {
     typealias MovieDescription = Dictionary<String, Any>
     typealias MoviesDescription = [MovieDescription]
+    
     var movies : BehaviorRelay<MoviesDescription> { get }
+    func willDislplay(indexPath: IndexPath)
 }
 
 class MovieDBViewModel : MovieDBViewModelProtocol {
+    
     var movies = BehaviorRelay<[Dictionary<String, Any>]>(value: [])
+    var moviesDescription : MoviesDescription = []
+    
+    var pageNumber : Int = 1
+    var loading = false
     
     let movieApiService : MovieAPIProtocol
     let bag = DisposeBag()
@@ -28,9 +35,28 @@ class MovieDBViewModel : MovieDBViewModelProtocol {
     }
     
     private func bind() {
-        movieApiService.discoverMovies(page: 1).map({ dictionary in
-            let results = dictionary.object(forKey: "results") as? MoviesDescription
-            return results ?? []
+        requestPage()
+    }
+    
+    func willDislplay(indexPath: IndexPath) {
+        if indexPath.row == movies.value.count-1 && loading == false {
+            requestPage()
+        }
+    }
+    
+    func requestPage() {
+        loading = true
+        movieApiService.discoverMovies(page: self.pageNumber).map({ dictionary in
+            guard let results = dictionary.object(forKey: "results") as? MoviesDescription else {
+                return self.moviesDescription
+            }
+            
+            self.loading = false
+            self.pageNumber += 1
+            
+            self.moviesDescription.append(contentsOf: results)
+            return self.moviesDescription
+            
         }).bind(to: movies).disposed(by: bag)
     }
 }

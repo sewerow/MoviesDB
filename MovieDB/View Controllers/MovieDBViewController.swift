@@ -42,5 +42,11 @@ class MovieDBViewController: UIViewController {
             guard let `self` = self else { return }
             `self`.navigator.show(segue: .MovieInfo, sender: `self`)
         }).disposed(by: bag)
+        
+        self.moviesTableView.rx.willDisplayCell.asObservable().subscribe { [weak self] (event: Event<(cell: UITableViewCell, indexPath: IndexPath)>) in
+            guard let `self` = self, let indexPath = event.element?.indexPath else { return }
+            `self`.viewModel.willDislplay(indexPath: indexPath)
+        }.disposed(by: bag)
+        
     }
 }

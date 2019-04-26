@@ -8,6 +8,7 @@
 
 import Foundation
 import RxAlamofire
+import Alamofire
 import RxSwift
 
 
@@ -29,7 +30,6 @@ class MovieAPIService : MovieAPIProtocol {
             
             return NSDictionary()
         }
-        
     }
     
     private func discoverMoviesRequest(page number: Int) -> String {
