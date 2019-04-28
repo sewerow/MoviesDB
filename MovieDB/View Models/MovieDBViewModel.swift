@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 protocol MovieDBViewModelProtocol {
-    typealias MovieDescription = Dictionary<String, Any>
+    typealias MovieDescription = Movie
     typealias MoviesDescription = [MovieDescription]
     
     var movies : BehaviorRelay<MoviesDescription> { get }
@@ -21,15 +21,18 @@ protocol MovieDBViewModelProtocol {
 
 class MovieDBViewModel : MovieDBViewModelProtocol {
     
-    var movies = BehaviorRelay<[Dictionary<String, Any>]>(value: [])
-    var moviesDescription : MoviesDescription = []
-    var sortMoviesDescription : MoviesDescription = []
+    var movies = BehaviorRelay<MoviesDescription>(value: [])
     
-    var pageNumber : Int = 1
-    var loading = false
+    private var moviesDescription : MoviesDescription = []
+    private var sortMoviesDescription : MoviesDescription = []
     
-    let movieApiService : MovieAPIProtocol
-    let bag = DisposeBag()
+    private var pageNumber : Int = 1
+    private var loading = false
+    
+    private let newPageTrigger = PublishSubject<(pageNumber: Int, loading: Bool)>()
+    private let bag = DisposeBag()
+    
+    private let movieApiService : MovieAPIProtocol
     
     init(movieApiService : MovieAPIProtocol) {
         self.movieApiService = movieApiService
@@ -37,42 +40,49 @@ class MovieDBViewModel : MovieDBViewModelProtocol {
     }
     
     private func bind() {
-        requestPage()
+        
+        //doon
+        
+        newPageTrigger
+            .filter({ (_: Int, loading: Bool) -> Bool in return loading == false })
+            .do(onNext: { _ in self.loading = true })
+            .flatMap { (pageNumber: Int, loading: Bool) -> Observable<MoviesDescription> in
+                
+                return self.movieApiService.discoverMovies(page: pageNumber)
+                    .map({ dataPage in
+                        
+                        guard let page = try? JSONDecoder().decode(Page.self, from: dataPage) else {
+                            return self.moviesDescription
+                        }
+                        
+                        self.moviesDescription.append(contentsOf: page.results)
+                        
+                        let sorted = page.results.sorted(by: { return $0.release_date > $1.release_date })
+                        self.sortMoviesDescription.append(contentsOf: sorted)
+                        
+                        return self.moviesDescription
+                        
+                    }).do(onNext: { _ in
+                        self.pageNumber += 1
+                        self.loading = false
+                    }).catchError({ (error) -> Observable<[Movie]> in
+                        print("errot has occured \(error)")
+                        self.loading = false
+                        return Observable.just(self.moviesDescription)
+                    })
+            }.bind(to: movies).disposed(by: bag)
+        
+        newPageTrigger.onNext((self.pageNumber, self.loading))
     }
     
     func willDislplay(indexPath: IndexPath) {
-        if indexPath.row == movies.value.count-1 && loading == false {
-            requestPage()
+        if indexPath.row == movies.value.count-1 {
+            newPageTrigger.onNext((self.pageNumber, self.loading))
         }
     }
     
     func filterByData() {
         moviesDescription = sortMoviesDescription
         movies.accept(moviesDescription)
-    }
-    
-    func requestPage() {
-        loading = true
-        movieApiService.discoverMovies(page: self.pageNumber).map({ dictionary in
-            guard let results = dictionary.object(forKey: "results") as? MoviesDescription else {
-                return self.moviesDescription
-            }
-            
-            self.loading = false
-            self.pageNumber += 1
-            
-            self.moviesDescription.append(contentsOf: results)
-            
-            
-            let sorted = results.sorted(by: { (first, second) -> Bool in
-                guard let date1 = first["release_date"] as? String,
-                    let date2 = second["release_date"] as? String else { return false }
-                return date1 > date2
-            })
-            self.sortMoviesDescription.append(contentsOf: sorted)
-            
-            return self.moviesDescription
-            
-        }).bind(to: movies).disposed(by: bag)
     }
 }

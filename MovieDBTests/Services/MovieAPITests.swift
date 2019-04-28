@@ -20,14 +20,38 @@ class MovieAPITests: XCTestCase {
         movieService = MovieAPIService()
     }
     
-    func testMovieDiscovery() {
+    func testMovieDiscoveryUrlSession() {
+        
+        let service = MovieAPIService()
         let expecation = XCTestExpectation(description: "list of movies")
         
-        movieService.discoverMovies(page: 1).subscribe { data in
-            XCTAssertTrue(data.element?.count != 0)
+        service.buildRequest(page: 1).subscribe(onNext: {
+            print($0)
             expecation.fulfill()
-        }.disposed(by: bag)
+        }).disposed(by: bag)
         
+        wait(for: [expecation], timeout: 50)
+    }
+    
+    func testMovieDiscoveryUrlSessionEncode() {
+        
+        let service = MovieAPIService()
+        let expecation = XCTestExpectation(description: "list of movies")
+
+        service
+            .buildRequest(page: 1)
+            .map { (data: Data) -> Page? in
+                let page : Page? = try? JSONDecoder().decode(Page.self, from: data)
+                return page
+            }.subscribe(onNext: {
+                if $0 != nil {
+                    expecation.fulfill()
+                } else {
+                    XCTAssert(false, "JSON serialization error")
+                }
+            })
+            .disposed(by: bag)
+            
         wait(for: [expecation], timeout: 50)
     }
 }

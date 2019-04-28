@@ -35,18 +35,16 @@ class MovieDBViewController: UIViewController {
     
     private func bindUI() {
         self.viewModel.movies.bind(to: moviesTableView.rx.items(cellIdentifier: "DefaultCell")) { row, model, cell in
-            cell.textLabel?.text = model["title"] as? String
+            cell.textLabel?.text = model.title
         }.disposed(by: bag)
         
-        self.moviesTableView.rx.modelSelected(Dictionary<String, Any>.self).subscribe{[weak self] model in
-            guard let `self` = self else { return }
-            `self`.navigator.show(segue: .MovieInfo, sender: `self`, info: model.element ?? [:])
-        }.disposed(by: bag)
+        self.moviesTableView.rx.modelSelected(Movie.self).subscribe(onNext: {
+            self.navigator.show(segue: .MovieInfo(model: $0), sender: self)
+        }).disposed(by: bag)
         
-        self.moviesTableView.rx.willDisplayCell.asObservable().subscribe { [weak self] (event: Event<(cell: UITableViewCell, indexPath: IndexPath)>) in
-            guard let `self` = self, let indexPath = event.element?.indexPath else { return }
-            `self`.viewModel.willDislplay(indexPath: indexPath)
-        }.disposed(by: bag)
+        self.moviesTableView.rx.willDisplayCell.asObservable().subscribe(onNext: {
+            self.viewModel.willDislplay(indexPath: $0.indexPath)
+        }).disposed(by: bag)
     }
     
     @IBAction func filter(_ sender: Any) {

@@ -13,13 +13,13 @@ protocol MovieInfoViewModelProtocol {
 }
 
 class MovieInfoViewModel : MovieInfoViewModelProtocol {
-    let info: Dictionary<String, Any>
+    private let movie: Movie
     
-    init(info: Dictionary<String, Any>) {
-        self.info = info
+    init(movie: Movie) {
+        self.movie = movie
     }
     
     var description : String {
-        return info.description
+        return String("\(self.movie)")
     }
 }
