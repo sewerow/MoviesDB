@@ -25,7 +25,7 @@ class MovieAPITests: XCTestCase {
         let service = MovieAPIService()
         let expecation = XCTestExpectation(description: "list of movies")
         
-        service.buildRequest(page: 1).subscribe(onNext: {
+        service.discoverMovies(page: 1).subscribe(onNext: {
             print($0)
             expecation.fulfill()
         }).disposed(by: bag)
@@ -39,7 +39,7 @@ class MovieAPITests: XCTestCase {
         let expecation = XCTestExpectation(description: "list of movies")
 
         service
-            .buildRequest(page: 1)
+            .discoverMovies(page: 1)
             .map { (data: Data) -> Page? in
                 let page : Page? = try? JSONDecoder().decode(Page.self, from: data)
                 return page
