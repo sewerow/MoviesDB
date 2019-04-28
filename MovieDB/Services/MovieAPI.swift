@@ -9,18 +9,27 @@
 import Foundation
 import RxSwift
 
+/// A type representing an error value that can be thrown by Movie API
 enum ApiError : Error {
     case invalidKey
     case notFound
     case serverFailure
 }
 
+/// The protocol describing abstraction of recieveing movies data
 protocol MovieAPIProtocol {
     func discoverMovies(page: Int) -> Observable<Data>
 }
 
+/// The service pefroming exact job of fetching movies data from server 
 class MovieAPIService : MovieAPIProtocol {
     
+    
+    /// Discover Movies
+    ///
+    /// - Parameters:
+    ///   - page        The exact number of page
+    /// - Return:       The data representing movies on the exact page
     func discoverMovies(page: Int) -> Observable<Data> {
         return buildRequest(page: page)
     }
@@ -28,9 +37,9 @@ class MovieAPIService : MovieAPIProtocol {
 
 extension MovieAPIService {
         
-    /**
-     * Private methods to build a request with RxCocoa
-     */
+    ///
+    /// Private methods to build a request with RxCocoa
+    ///
     private func buildRequest(page number: Int) -> Observable<Data> {
         
         let request: Observable<URLRequest> = Observable.create() { observer in

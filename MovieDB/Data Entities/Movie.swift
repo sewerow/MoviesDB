@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// The type describing overall available information about Movie
 struct Movie {
     var vote_count : Int64
     var id : Int64

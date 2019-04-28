@@ -8,6 +8,8 @@
 
 import Foundation
 
+/// The Page type represents portion of data recieving from server.
+/// Each responce from API contains exact structure of information as Page type.
 struct Page {
     var page : Int
     var total_results : Int
